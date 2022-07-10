@@ -20,9 +20,12 @@ a {
   --black: #3B434E;
   --white: white;
   --primary: #7653FC;
+  --primary-hover: #3d16d9;
   --red: #FC836D;;
   --green: #1DC47E;
   --green-light:#1DC37E;
   --font: "'Open Sans', sans-serif";
   --background: #E5E5E5;
+  --grey: #EBEBEB;
+
 }
