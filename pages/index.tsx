@@ -1,5 +1,7 @@
 import { Htag } from "../components/index";
 import { Button } from "../components/index";
+import { P } from "../components/index";
+import { Tag } from "../components/index";
 
 export default function Home() {
   return (
@@ -9,6 +11,8 @@ export default function Home() {
         Hello
       </Button>
       <Button appearance="ghost">Hello</Button>
+      <P children={"ewdwedwedw"}></P>
+      <Tag children={"ddfff"} color="red" />
     </>
   );
 }
