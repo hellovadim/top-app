@@ -14,8 +14,8 @@ class MyDocument extends Document {
     const initialProps = await Document.getInitialProps(ctx);
     return { ...initialProps };
   }
-
   render(): JSX.Element {
+    console.log("hi");
     return (
       <Html lang="ru">
         <Head>
