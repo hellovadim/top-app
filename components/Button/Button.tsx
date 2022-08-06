@@ -1,6 +1,7 @@
 import styles from "./Button.module.css";
 import { ButtonProps } from "./Button.props";
 import classNames from "../../node_modules/classnames/index";
+import ArrowIcon from "./arrow.svg";
 
 export const Button = ({
   children,
@@ -24,7 +25,7 @@ export const Button = ({
             [styles.down]: arrow == "down",
           })}
         >
-         
+          <ArrowIcon />
         </span>
       )}
     </button>
