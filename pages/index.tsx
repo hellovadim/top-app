@@ -4,8 +4,9 @@ import { Htag } from "../components/index";
 import { Button } from "../components/index";
 import { P } from "../components/index";
 import { Tag, Rating } from "../components/index";
+import { withLayout } from "../layout/Layout";
 
-export default function Home() {
+function Home() {
   const [raiting, setRating] = useState<number>(4);
   return (
     <>
@@ -20,3 +21,4 @@ export default function Home() {
     </>
   );
 }
+export default withLayout(Home);
