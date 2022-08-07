@@ -1,7 +1,7 @@
 import { Htag } from "../components/index";
 import { Button } from "../components/index";
 import { P } from "../components/index";
-import { Tag } from "../components/index";
+import { Tag, Rating } from "../components/index";
 
 export default function Home() {
   return (
@@ -13,6 +13,7 @@ export default function Home() {
       <Button appearance="ghost">Hello</Button>
       <P children={"ewdwedwedw"}></P>
       <Tag children={"ddfff"} color="red" />
+      <Rating rating={4} />
     </>
   );
 }
