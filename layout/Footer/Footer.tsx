@@ -1,7 +1,7 @@
 import { FooterProps } from "./Footer.props";
 
-const Footer = ({}): JSX.Element => {
-  return <footer>Footer</footer>;
+const Footer = ({ ...props }: FooterProps): JSX.Element => {
+  return <footer {...props}>Footer</footer>;
 };
 
 export default Footer;
