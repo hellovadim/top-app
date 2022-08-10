@@ -17,12 +17,11 @@ class MyDocument extends Document {
   render(): JSX.Element {
     return (
       <Html lang="ru">
-        <Head>
-          <body>
-            <Main />
-            <NextScript />
-          </body>
-        </Head>
+        <Head />
+        <body>
+          <Main />
+          <NextScript />
+        </body>
       </Html>
     );
   }
