@@ -34,7 +34,7 @@
 	cursor: pointer;
 	text-transform: uppercase;
 
-	color: var(--black);
+	color: var(--gray-dark);
 	border: none;
 
 	background: none;
@@ -69,7 +69,7 @@
 
 	cursor: pointer;
 
-	color: var(--black);
+	color: var(--gray-dark);
 	outline-offset: -1px;
 
 	font-size: 14px;

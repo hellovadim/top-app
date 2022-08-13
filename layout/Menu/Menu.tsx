@@ -1,105 +1,132 @@
-import { useContext } from "react";
-import styles from "./Menu.module.css";
-import { TopAppContext } from "../../context/app.context";
-import { FirstLevelMenu, PageItem } from "../../interfaces/menu.interfaces";
-import CourseIcon from "./icons/graduation-hat 1.svg";
-import ServicesIcon from "./icons/cloud.svg";
-import BooksIcon from "./icons/books.svg";
-import ProductIcon from "./icons/product.svg";
-import { TopLevelCategory } from "../../interfaces/toppage.interface";
-import classNames from "classnames";
-import Link from "next/link";
+import styles from './Menu.module.css';
+import cn from 'classnames';
+import { useContext, KeyboardEvent, useState } from 'react';
+import { AppContext } from '../../context/app.context';
+import { FirstLevelMenuItem, PageItem } from '../../interfaces/menu.interface';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { firstLevelMenu } from '../../helpers/helpers';
+import { motion, useReducedMotion } from 'framer-motion';
 
-const firstLevelMenu: FirstLevelMenu[] = [
-  {
-    route: "courses",
-    name: "Курсы",
-    icon: <CourseIcon />,
-    id: TopLevelCategory.Courses,
-  },
-  {
-    route: "services",
-    name: "Сервисы",
-    icon: <ServicesIcon />,
-    id: TopLevelCategory.Services,
-  },
-  {
-    route: "books",
-    name: "Книги",
-    icon: <BooksIcon />,
-    id: TopLevelCategory.Books,
-  },
-  {
-    route: "products",
-    name: "Продукты",
-    icon: <ProductIcon />,
-    id: TopLevelCategory.Products,
-  },
-];
-const Menu = () => {
-  const { menu, setMenu, firstCategory } = useContext(TopAppContext);
-  console.log(menu);
-  const buildFirst = () => {
-    return (
-      <>
-        {firstLevelMenu.map((m) => (
-          <div key={m.route}>
-            <Link href={`/${m.route}`}>
-              <a>
-                <div
-                  className={classNames(styles.firstLevel, {
-                    [styles.firstLevelActive]: m.id == firstCategory,
-                  })}
-                >
-                  {m.icon}
-                  <span>{m.name}</span>
-                </div>
-              </a>
-            </Link>
-            {m.id == firstCategory && buildSecond(m)}
-          </div>
-        ))}
-      </>
-    );
-  };
-  const buildSecond = (menuItem: FirstLevelMenu) => {
-    return (
-      <div className={styles.secondBlock}>
-        {menu.map((m) => (
-          <div key={m._id.secondCategory}>
-            <div className={styles.secondLevel}>
-              {m._id.secondCategory}
-              <div
-                className={classNames(styles.secondLevelBlock, {
-                  [styles.secondLevelBlockOpen]: m.isOpened,
-                })}
-              ></div>
-              {buildThird(m.pages, menuItem.route)}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
-  const buildThird = (pages: PageItem[], route: string) => {
-    return pages.map((p) => (
-      <Link href={`/${route}/${p.alias}`}>
-        <a
-          className={classNames(styles.thirdLevel, {
-            [styles.thirdLevelActive]: true,
-          })}
-        >
-          {p.category}
-        </a>
-      </Link>
-    ));
-  };
+export const Menu = (): JSX.Element => {
+	const { menu, setMenu, firstCategory } = useContext(AppContext);
+	const [announce, setAnnounce] = useState<'closed' | 'opened' | undefined>();
+	const shouldReduceMotion = useReducedMotion();
+	const router = useRouter();
 
-  return (
-    <div className={styles.menu}>
-      <ul>{buildFirst()}</ul>
-    </div>
-  );
+	const variants = {
+		visible: {
+			marginBottom: 20,
+			transition: shouldReduceMotion ? {} : {
+				when: 'beforeChildren',
+				staggerChildren: 0.1
+			}
+		},
+		hidden: { marginBottom: 0 }
+	};
+
+	const variantsChildren = {
+		visible: {
+			opacity: 1,
+			height: 29
+		},
+		hidden: { opacity: shouldReduceMotion ? 1 : 0, height: 0 }
+	};
+
+	const openSecondLevel = (secondCategory: string) => {
+		setMenu && setMenu(menu.map(m => {
+			if (m._id.secondCategory == secondCategory) {
+				setAnnounce(m.isOpened ? 'closed' : 'opened');
+				m.isOpened = !m.isOpened;
+			}
+			return m;
+		}));
+	};
+
+	const openSecondLevelKey = (key: KeyboardEvent, secondCategory: string) => {
+		if (key.code == 'Space' || key.code == 'Enter') {
+			key.preventDefault();
+			openSecondLevel(secondCategory);
+		}
+	};
+
+	const buildFirstLevel = () => {
+		return (
+			<ul className={styles.firstLevelList}>
+				{firstLevelMenu.map(m => (
+					<li key={m.route} aria-expanded={m.id == firstCategory}>
+						<Link href={`/${m.route}`}>
+							<a>
+								<div className={cn(styles.firstLevel, {
+									[styles.firstLevelActive]: m.id == firstCategory
+								})}>
+									{m.icon}
+									<span>{m.name}</span>
+								</div>
+							</a>
+						</Link>
+						{m.id == firstCategory && buildSecondLevel(m)}
+					</li>
+				))}
+			</ul>
+		);
+	};
+
+	const buildSecondLevel = (menuItem: FirstLevelMenuItem) => {
+		return (
+			<ul className={styles.secondBlock}>
+				{menu.map(m => {
+					if (m.pages.map(p => p.alias).includes(router.asPath.split('/')[2])) {
+						m.isOpened = true;
+					}
+					return (
+						<li key={m._id.secondCategory}>
+							<button
+								onKeyDown={(key: KeyboardEvent) => openSecondLevelKey(key, m._id.secondCategory)}
+								className={styles.secondLevel}
+								onClick={() => openSecondLevel(m._id.secondCategory)}
+								aria-expanded={m.isOpened}
+							>{m._id.secondCategory}</button>
+							<motion.ul
+								layout
+								variants={variants}
+								initial={m.isOpened ? 'visible' : 'hidden'}
+								animate={m.isOpened ? 'visible' : 'hidden'}
+								className={styles.secondLevelBlock}
+							>
+								{buildThirdLevel(m.pages, menuItem.route, m.isOpened ?? false)}
+							</motion.ul>
+						</li>
+					);
+				})}
+			</ul>
+		);
+	};
+
+	const buildThirdLevel = (pages: PageItem[], route: string, isOpened: boolean) => {
+		return (
+			pages.map(p => (
+				<motion.li key={p._id} variants={variantsChildren}>
+					<Link href={`/${route}/${p.alias}`}>
+						<a
+							tabIndex={isOpened ? 0 : -1}
+							className={cn(styles.thirdLevel, {
+								[styles.thirdLevelActive]: `/${route}/${p.alias}` == router.asPath
+							})}
+							aria-current={`/${route}/${p.alias}` == router.asPath ? 'page' : false}
+						>
+							{p.category}
+						</a>
+					</Link>
+				</motion.li>
+			))
+		);
+	};
+
+	return (
+		<nav className={styles.menu} role='navigation'>
+			{announce && <span role="log" className="visualyHidden">{announce == 'opened' ? 'развернуто' : 'свернуто'}</span>}
+			{buildFirstLevel()}
+		</nav>
+	);
 };
-
-export default Menu;

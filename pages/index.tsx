@@ -1,49 +1,49 @@
-import { useState } from "react";
-import { GetStaticProps } from "next";
-import { MenuItem } from "../interfaces/menu.interfaces";
-import { Htag } from "../components/index";
-import { Button } from "../components/index";
-import { P } from "../components/index";
-import { Tag, Rating } from "../components/index";
-import { withLayout } from "../layout/Layout";
-import axios from "axios";
+import { GetStaticProps } from 'next';
+import React, { useState } from 'react';
+import { Button, Htag, Input, P, Rating, Tag, Textarea } from '../components';
+import { withLayout } from '../layout/Layout';
+import axios from 'axios';
+import { MenuItem } from '../interfaces/menu.interface';
+import { API } from '../helpers/api';
 
-function Home({ menu, firstCategory }: HomeProps) {
-  const [raiting, setRating] = useState<number>(4);
-  return (
-    <>
-      <Htag tag="h1">Текст</Htag>
-      <Button appearance="primary" arrow="down">
-        Hello
-      </Button>
-      <Button appearance="ghost">Hello</Button>
-      <P children={"ewdwedwedw"}></P>
-      <Tag children={"ddfff"} color="red" />
-      <Rating rating={raiting} isEditable={true} setRating={setRating} />
-      {menu.map((list) => (
-        <div key={list._id.secondCategory}>{list._id.secondCategory}</div>
-      ))}
-    </>
-  );
+function Home({ menu }: HomeProps): JSX.Element {
+	const [rating, setRating] = useState<number>(4);
+
+	return (
+		<>
+			<Htag tag='h1'>Заголовок</Htag>
+			<Button appearance='primary' arrow='right'>Кнопка</Button>
+			<Button appearance='ghost' arrow='down'>Кнопка</Button>
+			<P size='l'>Большой</P>
+			<P>Средний</P>
+			<P size='s'>Маленький</P>
+			<Tag size='s'>Ghost</Tag>
+			<Tag size='m' color='red'>Red</Tag>
+			<Tag size='s' color='green'>Green</Tag>
+			<Tag color='primary'>Green</Tag>
+			<Rating rating={rating} isEditable setRating={setRating} />
+			<Input placeholder='тест' />
+			<Textarea placeholder='тест area' />
+		</>
+	);
 }
+
 export default withLayout(Home);
 
-export const getStaticProps: GetStaticProps = async () => {
-  const firstCategory = 0;
-  const { data: menu } = await axios.post<MenuItem[]>(
-    process.env.NEXT_PUBLIC_DOMAIN + "api/top-page/find",
-    {
-      firstCategory,
-    }
-  );
-  return {
-    props: {
-      menu,
-      firstCategory,
-    },
-  };
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+	const firstCategory = 0;
+	const { data: menu } = await axios.post<MenuItem[]>(API.topPage.find, {
+		firstCategory
+	});
+	return {
+		props: {
+			menu,
+			firstCategory
+		}
+	};
 };
+
 interface HomeProps extends Record<string, unknown> {
-  menu: MenuItem[];
-  firstCategory: number;
+	menu: MenuItem[];
+	firstCategory: number;
 }
