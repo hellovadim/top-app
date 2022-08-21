@@ -1,5 +1,6 @@
 {
 	"name": "top-app",
+	"homepage": "https://hellovadim.github.io/top-app",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
