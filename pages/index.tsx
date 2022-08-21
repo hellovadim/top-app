@@ -5,33 +5,16 @@ import { withLayout } from "../layout/Layout";
 import axios from "axios";
 import { MenuItem } from "../interfaces/menu.interface";
 import { API } from "../helpers/api";
+import Error from "next/error";
 
 function Home({ menu }: HomeProps): JSX.Element {
   const [rating, setRating] = useState<number>(4);
 
   return (
     <>
-      <Htag tag="h1">Заголовок</Htag>
-      <Button appearance="primary" arrow="right">
-        Кнопка
-      </Button>
-      <Button appearance="ghost" arrow="down">
-        Кнопка
-      </Button>
-      <P size="l">Большой</P>
-      <P>Средний</P>
-      <P size="s">Маленький</P>
-      <Tag size="s">Ghost</Tag>
-      <Tag size="m" color="red">
-        Red
-      </Tag>
-      <Tag size="s" color="green">
-        Green
-      </Tag>
-      <Tag color="primary">Green</Tag>
-      <Rating rating={rating} isEditable setRating={setRating} />
-      <Input placeholder="тест" />
-      <Textarea placeholder="тест area" />
+      <Htag tag="h1">Учебный проект</Htag>
+      <Htag tag="h2">Создан на курсе Next.js + TypeScript</Htag>
+      <Htag tag="h3">Можно посмотреть страницы курсов</Htag>
     </>
   );
 }
