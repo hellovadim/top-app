@@ -1,5 +1,5 @@
 import { SidebarProps } from "../SideBar/SideBar.props";
-import styles from "./Sidebar.module.css";
+import styles from "./SideBar.module.css";
 import cn from "classnames";
 import { Menu } from "../Menu/Menu";
 import Logo from "../logo.svg";

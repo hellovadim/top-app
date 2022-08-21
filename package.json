@@ -12,7 +12,7 @@
 		"start": "next start",
 		"stylelint": "stylelint \"**/*.css\" --fix",
 		"predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+		"deploy": "gh-pages -d build"
 	},
 	"dependencies": {
 		"axios": "^0.24.0",
